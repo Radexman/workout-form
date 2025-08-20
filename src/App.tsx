@@ -1,7 +1,9 @@
+import FormContainer from './components/FormContainer';
+
 function App() {
   return (
-    <div className="container mx-auto">
-      <h1 className="bg-blank text-center text-3xl font-medium">Workout Form</h1>
+    <div className="bg-background min-h-screen">
+      <FormContainer />
     </div>
   );
 }
