@@ -5,6 +5,7 @@ import RangeInput from './inputs/RangeInput';
 import FileInput from './inputs/FileInput';
 import CalendarInput from './inputs/CalendarInput';
 import Button from './ui/Button';
+import { submitForm } from '../api/submitForm';
 import { validateForm } from '../utils/validateForm';
 
 const FormContainer = () => {
@@ -34,13 +35,20 @@ const FormContainer = () => {
     );
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     const newErrors = validateForm(formData);
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      console.log('Form is valid ✅', formData);
+    if (Object.keys(newErrors).length === 0 && formData.photo) {
+      try {
+        await submitForm({
+          ...formData,
+          photo: formData.photo,
+        });
+      } catch (err) {
+        console.error('Submit failed', err);
+      }
     }
   };
 
@@ -48,7 +56,13 @@ const FormContainer = () => {
     <div className="text-primary-dark mx-auto max-w-md py-20">
       <div className="grid place-content-center">
         <h1 className="mb-4 text-2xl font-medium">Personal info</h1>
-        <form onSubmit={handleSubmit} className="w-full space-y-4" noValidate>
+        <form
+          onSubmit={handleSubmit}
+          className="w-full space-y-4"
+          noValidate
+          role="form"
+          aria-labelledby="form-title"
+        >
           <TextInput
             label="First Name"
             name="firstName"
@@ -97,8 +111,8 @@ const FormContainer = () => {
             hour={formData.hour}
             onDateChange={(newDate) => setFormData((prev) => ({ ...prev, date: newDate }))}
             onHourChange={(newHour) => setFormData((prev) => ({ ...prev, hour: newHour }))}
+            error={errors.dateHour}
           />
-
           <Button text="Send Application" disabled={!isFormFilled()} />
         </form>
       </div>

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import type { ChangeEvent } from 'react';
+import { Icon } from '@iconify/react';
 
 interface FileInputProps {
   label: string;
@@ -11,6 +12,19 @@ interface FileInputProps {
 }
 
 const FileInput = ({ label, name, value, onChange, error, required }: FileInputProps) => {
+  const deleteFile = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const event = {
+      target: { name, files: null },
+    } as unknown as ChangeEvent<HTMLInputElement>;
+    onChange(event);
+
+    const inputEl = document.getElementById(name) as HTMLInputElement | null;
+    if (inputEl) {
+      inputEl.value = '';
+    }
+  };
+
   return (
     <div className="mt-12 flex flex-col">
       <label htmlFor={name}>{label}</label>
@@ -22,7 +36,16 @@ const FileInput = ({ label, name, value, onChange, error, required }: FileInputP
         )}
       >
         {value ? (
-          <span className="text-primary">{value.name}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-primary-dark font-medium">{value.name}</span>
+            <button
+              type="button"
+              onClick={deleteFile}
+              className="bg-primary-dark hover:bg-error z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full"
+            >
+              <Icon icon="mingcute:close-fill" className="text-sm text-white" />
+            </button>
+          </div>
         ) : (
           <>
             <span className="text-primary mr-1 underline">Upload a file</span>{' '}

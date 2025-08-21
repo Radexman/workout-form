@@ -28,5 +28,9 @@ export const validateForm = (formData: FormData) => {
     errors.photo = 'Photo required';
   }
 
+  if (!formData.date || !formData.hour) {
+    errors.dateHour = 'Date and hour required';
+  }
+
   return errors;
 };

@@ -4,6 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import HourPicker from './HourPicker';
 import HolidayTooltip from '../ui/HolidayTooltip';
+import FormErrorTooltip from '../ui/FormErrorTooltip';
 import { formatDate } from '../../utils/date';
 import { fetchHolidays } from '../../api/holidays';
 import type { Holidays } from '../../types';
@@ -13,6 +14,7 @@ interface CalendarInputProps {
   onDateChange: (date: string) => void;
   hour?: string;
   onHourChange?: (hour: string) => void;
+  error?: string;
 }
 
 const MyContainer = ({ className, children }: { className?: string; children: ReactNode }) => {
@@ -25,7 +27,7 @@ const MyContainer = ({ className, children }: { className?: string; children: Re
   );
 };
 
-const CalendarInput = ({ date, onDateChange, hour, onHourChange }: CalendarInputProps) => {
+const CalendarInput = ({ date, onDateChange, hour, onHourChange, error }: CalendarInputProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(date ? new Date(date) : null);
   const [selectedHour, setSelectedHour] = useState<string | undefined>(hour || undefined);
   const [holidayInfo, setHolidayInfo] = useState<string | null>(null);
@@ -74,6 +76,12 @@ const CalendarInput = ({ date, onDateChange, hour, onHourChange }: CalendarInput
     }
 
     onDateChange(formatDate(date));
+
+    if (!selectedHour) {
+      const defaultHour = '12:00';
+      setSelectedHour(defaultHour);
+      onHourChange?.(defaultHour);
+    }
   };
 
   const handleChangeHour = (hour: string) => {
@@ -89,7 +97,7 @@ const CalendarInput = ({ date, onDateChange, hour, onHourChange }: CalendarInput
     <div className="mt-12 flex max-w-md flex-col">
       <h2 className="text-primary-dark mb-4 text-2xl font-medium">Your workout</h2>
 
-      <div className="flex flex-col items-start justify-between gap-4 md:flex-row">
+      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:gap-7">
         <div className="flex flex-col">
           <label htmlFor="date" className="mb-2 text-gray-700">
             Date
@@ -102,12 +110,18 @@ const CalendarInput = ({ date, onDateChange, hour, onHourChange }: CalendarInput
             filterDate={filterDate}
             calendarStartDay={1}
             required
+            aria-labelledby="date-label"
           />
+          {holidayInfo && <HolidayTooltip text={holidayInfo} />}
+          <FormErrorTooltip error={error} />
         </div>
 
-        {holidayInfo && <HolidayTooltip text={holidayInfo} />}
-
-        {selectedDate && <HourPicker selectedHour={selectedHour} onHourChange={handleChangeHour} />}
+        {selectedDate && (
+          <div role="group" aria-labelledby="hour-label">
+            {' '}
+            <HourPicker selectedHour={selectedHour} onHourChange={handleChangeHour} />
+          </div>
+        )}
       </div>
     </div>
   );

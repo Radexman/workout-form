@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { Icon } from '@iconify/react';
 import type { ChangeEvent } from 'react';
+import FormErrorTooltip from '../ui/FormErrorTooltip';
 
 interface TextInputProps {
   label: string;
@@ -29,16 +29,13 @@ const TextInput = ({ label, name, value, onChange, error, type, required }: Text
           }
         )}
         required={required}
+        aria-invalid={!!error}
+        aria-describedby={`${name}-error`}
       />
-      {error && (
-        <div className="flex gap-1">
-          <Icon icon="mingcute:warning-fill" className="text-error mt-[2px] h-5 w-5" />
-          <div>
-            <p className="text-sm">{error}</p>
-            {type === 'email' && <p className="text-sm">Example: address@email.com</p>}
-          </div>
-        </div>
-      )}
+      <FormErrorTooltip
+        error={error}
+        extraText={type === 'email' ? 'Example: address@email.com' : undefined}
+      />
     </div>
   );
 };

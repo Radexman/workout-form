@@ -25,12 +25,10 @@ const RangeInput = ({
   return (
     <div className="relative flex flex-col">
       <label htmlFor={name}>{label}</label>
-
       <div className="flex justify-between py-1 text-xs">
         <div>{min}</div>
         <div>{max}</div>
       </div>
-
       <input
         type="range"
         name={name}
@@ -45,10 +43,16 @@ const RangeInput = ({
           { 'ring-error ring-2': error }
         )}
         style={{ position: 'relative', zIndex: 2 }}
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={value}
+        aria-invalid={!!error}
       />
-
-      {error && <p className="text-sm">{error}</p>}
-
+      {error && (
+        <p className="text-sm" id={`${name}-error`}>
+          {error}
+        </p>
+      )}{' '}
       {/* Tooltip */}
       <div
         className="bg-background text-primary border-muted pointer-events-none absolute -bottom-10 w-12 rounded border py-1 text-center text-sm shadow-md"
