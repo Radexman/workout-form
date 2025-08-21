@@ -1,49 +1,69 @@
 import DatePicker from 'react-datepicker';
-import { useState } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
+import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import 'react-datepicker/dist/react-datepicker.css';
 
-interface Holiday {
-  date: string;
-  name: string;
-  type?: string;
-}
+import type { Holidays } from '../../types';
+
+const apiKey = import.meta.env.VITE_API_NINJAS_KEY;
 
 const CalendarInput = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [holidayInfo, setHolidayInfo] = useState<string | null>(null);
+  const [holidays, setHolidays] = useState<Holidays[]>([]);
 
-  const holidays: Holiday[] = [
-    { date: new Date().toISOString().split('T')[0], name: 'Sample Holiday', type: 'OBSERVANCE' },
-    { date: '2025-01-01', name: "New Year's Day", type: 'NATIONAL_HOLIDAY' },
-    { date: '2025-12-25', name: 'Christmas Day', type: 'NATIONAL_HOLIDAY' },
-  ];
+  useEffect(() => {
+    const fetchHolidays = async () => {
+      try {
+        const response = await fetch('https://api.api-ninjas.com/v1/holidays?country=PL', {
+          headers: {
+            'X-Api-Key': apiKey,
+          },
+        });
+        const data: Holidays[] = await response.json();
+        setHolidays(data);
+      } catch (error) {
+        console.error('Failed to fetch holidays', error);
+      }
+    };
+
+    fetchHolidays();
+  }, []);
+
+  const formatDate = (date: Date): string => {
+    return date.toLocaleDateString('en-CA');
+  };
 
   const isSunday = (date: Date): boolean => date.getDay() === 0;
 
   const isNationalHoliday = (date: Date): boolean => {
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = formatDate(date);
     return holidays.some((h) => h.date === dateStr && h.type === 'NATIONAL_HOLIDAY');
   };
 
-  const getHolidayName = (date: Date): string | null => {
-    const dateStr = date.toISOString().split('T')[0];
-    const holiday = holidays.find((h) => h.date === dateStr);
-    return holiday ? holiday.name : null;
+  const isObservance = (date: Date): Holidays | null => {
+    const dateStr = formatDate(date);
+    return holidays.find((h) => h.date === dateStr && h.type === 'OBSERVANCE') || null;
   };
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
-    if (date && isNationalHoliday(date)) {
-      const holidayName = getHolidayName(date);
-      setHolidayInfo(`It's ${holidayName}`);
+
+    if (!date) {
+      setHolidayInfo(null);
+      return;
+    }
+
+    const observance = isObservance(date);
+    if (observance) {
+      setHolidayInfo(`It's ${observance.name}`);
     } else {
       setHolidayInfo(null);
     }
   };
 
   const filterDate = (date: Date): boolean => {
-    return !isSunday(date);
+    return !isSunday(date) && !isNationalHoliday(date);
   };
 
   return (
