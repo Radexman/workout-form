@@ -92,7 +92,12 @@ const FormContainer = () => {
             error={errors.photo}
             required
           />
-          <CalendarInput />
+          <CalendarInput
+            date={formData.date}
+            hour={formData.hour}
+            onDateChange={(newDate) => setFormData((prev) => ({ ...prev, date: newDate }))}
+            onHourChange={(newHour) => setFormData((prev) => ({ ...prev, hour: newHour }))}
+          />
 
           <Button text="Send Application" disabled={!isFormFilled()} />
         </form>
