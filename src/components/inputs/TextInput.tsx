@@ -35,7 +35,7 @@ const TextInput = ({ label, name, value, onChange, error, type, required }: Text
           <Icon icon="mingcute:warning-fill" className="text-error mt-[2px] h-5 w-5" />
           <div>
             <p className="text-sm">{error}</p>
-            <p className="text-sm">Example: address@email.com</p>
+            {type === 'email' && <p className="text-sm">Example: address@email.com</p>}
           </div>
         </div>
       )}

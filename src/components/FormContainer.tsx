@@ -3,6 +3,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import TextInput from './inputs/TextInput';
 import RangeInput from './inputs/RangeInput';
 import FileInput from './inputs/FileInput';
+import CalendarInput from './inputs/CalendarInput';
 import Button from './ui/Button';
 import { validateForm } from '../utils/validateForm';
 
@@ -91,6 +92,7 @@ const FormContainer = () => {
             error={errors.photo}
             required
           />
+          <CalendarInput />
 
           <Button text="Send Application" disabled={!isFormFilled()} />
         </form>
