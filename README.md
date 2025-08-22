@@ -31,6 +31,9 @@ Formularz korzysta z [API Ninjas](https://api-ninjas.com/) zwracającego listę 
 - **Range i Calendar Input:**  
   Stylowanie tych komponentów jest trudniejsze w czystym Tailwind CSS ze względu na ograniczenia webkitów. Funkcjonalność jest w pełni zachowana, różnice w wyglądzie są minimalne i celowo opisane w README.
 
+- **Mock wysyłki formularza:**
+  Ze względu na to, że endpoint http://letsworkout.pl/submit jest fikcyjny i nie działa w środowisku live, submit formularza korzysta z mocka. Po kliknięciu „Send Application” dane są logowane w konsoli (console.log), a użytkownik widzi komunikat o sukcesie bez faktycznej wysyłki. W realnej aplikacji funkcja submitForm musiałaby wykonywać prawdziwy POST do serwera.
+
 ---
 
 ## Uruchomienie projektu

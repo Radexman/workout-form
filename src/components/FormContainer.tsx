@@ -50,9 +50,6 @@ const FormContainer = () => {
           ...formData,
           photo: formData.photo,
         });
-        console.log(formData);
-        // 👆 Log payload tylko dla celów rekrutacyjnych (ułatwia weryfikację działania formularza).
-        // W realnej aplikacji zostałby usunięty.
         setStatus('success');
         setFormData(initialFormData);
         setErrors({});
