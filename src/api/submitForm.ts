@@ -20,7 +20,7 @@ export const submitForm = async (data: FormDataPayload): Promise<void> => {
     formData.append('date', data.date);
     formData.append('hour', data.hour);
 
-    const response = await fetch('http://letsworkout.pl/submit', {
+    const response = await fetch('/submit', {
       method: 'POST',
       body: formData,
     });
@@ -29,6 +29,7 @@ export const submitForm = async (data: FormDataPayload): Promise<void> => {
       throw new Error(`Failed to submit form: ${response.status}`);
     }
 
+    await response.text();
     console.log('Form submitted successfully');
   } catch (error) {
     console.error(`Error submitting form: ${error}`);

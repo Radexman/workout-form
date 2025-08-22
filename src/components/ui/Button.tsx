@@ -11,7 +11,7 @@ const Button = ({ text, disabled }: ButtonProps) => {
       type="submit"
       disabled={disabled}
       className={clsx(
-        'w-[342px] rounded-sm px-4 py-3 font-sans text-white md:w-[426px]',
+        'mt-8 w-[342px] rounded-sm px-4 py-3 font-sans text-white md:w-[426px]',
         disabled ? 'bg-muted cursor-default' : 'bg-primary hover:bg-primary-hover cursor-pointer'
       )}
     >

@@ -5,20 +5,24 @@ import RangeInput from './inputs/RangeInput';
 import FileInput from './inputs/FileInput';
 import CalendarInput from './inputs/CalendarInput';
 import Button from './ui/Button';
+import SubmitStatusMessage from './ui/SubmitStatusMessage';
 import { submitForm } from '../api/submitForm';
 import { validateForm } from '../utils/validateForm';
 
+const initialFormData = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  age: 8,
+  photo: null as File | null,
+  date: '',
+  hour: '',
+};
+
 const FormContainer = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    age: 8,
-    photo: null as File | null,
-    date: '',
-    hour: '',
-  });
+  const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [status, setStatus] = useState<'success' | 'error' | null>(null);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, files } = event.target as any;
@@ -46,8 +50,15 @@ const FormContainer = () => {
           ...formData,
           photo: formData.photo,
         });
+        console.log(formData);
+        // 👆 Log payload tylko dla celów rekrutacyjnych (ułatwia weryfikację działania formularza).
+        // W realnej aplikacji zostałby usunięty.
+        setStatus('success');
+        setFormData(initialFormData);
+        setErrors({});
       } catch (err) {
         console.error('Submit failed', err);
+        setStatus('error');
       }
     }
   };
@@ -115,6 +126,7 @@ const FormContainer = () => {
           />
           <Button text="Send Application" disabled={!isFormFilled()} />
         </form>
+        <SubmitStatusMessage status={status} onClear={() => setStatus(null)} />
       </div>
     </div>
   );

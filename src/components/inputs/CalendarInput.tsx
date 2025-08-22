@@ -32,14 +32,24 @@ const CalendarInput = ({ date, onDateChange, hour, onHourChange, error }: Calend
   const [selectedHour, setSelectedHour] = useState<string | undefined>(hour || undefined);
   const [holidayInfo, setHolidayInfo] = useState<string | null>(null);
   const [holidays, setHolidays] = useState<Holidays[]>([]);
+  const [holidaysError, setHolidaysError] = useState<string | null>(null);
 
   useEffect(() => {
     let isCancelled = false;
 
     (async () => {
-      const data = await fetchHolidays('PL');
-      if (!isCancelled) {
-        setHolidays(data);
+      try {
+        const data = await fetchHolidays('PL');
+        if (!isCancelled) {
+          if (data.length === 0) {
+            setHolidaysError('Could not load holidays data.');
+          }
+          setHolidays(data);
+        }
+      } catch (error) {
+        if (!isCancelled) {
+          setHolidaysError('Could not load holidays data.');
+        }
       }
     })();
 
@@ -113,7 +123,7 @@ const CalendarInput = ({ date, onDateChange, hour, onHourChange, error }: Calend
             aria-labelledby="date-label"
           />
           {holidayInfo && <HolidayTooltip text={holidayInfo} />}
-          <FormErrorTooltip error={error} />
+          <FormErrorTooltip error={holidaysError || error} />
         </div>
 
         {selectedDate && (

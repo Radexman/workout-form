@@ -6,7 +6,7 @@ interface HolidayTooltipProps {
 
 const HolidayTooltip = ({ text }: HolidayTooltipProps) => {
   return (
-    <div className="flex gap-1 text-sm">
+    <div className="mt-2 flex gap-1 text-sm">
       <Icon icon="mingcute:warning-fill" className="text-muted mt-[1px] h-5 w-5" />
       {text}.
     </div>

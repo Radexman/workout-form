@@ -23,9 +23,10 @@ const TextInput = ({ label, name, value, onChange, error, type, required }: Text
         value={value}
         onChange={onChange}
         className={clsx(
-          'border-muted text-primary-dark focus:outline-primary-hover focus:bg-primary-hover/5 h-12 w-full max-w-[426px] rounded-lg border bg-white px-4 font-medium',
+          'text-primary-dark focus:outline-primary-hover focus:bg-primary-focus h-12 w-full max-w-[426px] rounded-lg border px-4 font-medium',
           {
-            'bg-error shadow-error border-red-500 shadow-sm': error,
+            'border-muted bg-white': !error,
+            'border-error border-2 bg-[#FEECEC]': error,
           }
         )}
         required={required}
